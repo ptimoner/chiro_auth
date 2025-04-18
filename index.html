@@ -2,35 +2,67 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Supabase Auth Flow</title>
+  <title>Reset Your Password</title>
 </head>
 <body>
-  <h1>Authenticating...</h1>
+  <h1>🔐 Supabase Password Recovery</h1>
+  <div id="content"><p>Loading...</p></div>
 
-  <script>
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js'
+
+    // 🔐 Supabase project URL and ANON key
+    const supabase = createClient(
+      'https://rrkmlitneztwsaemfdha.supabase.co',
+      'YOUR_PUBLIC_ANON_KEY_HERE'
+    );
+
+    // 📦 Get the token and type from the URL
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
     const type = params.get("type");
 
-    if (!token || !type) {
-      document.body.innerHTML = "<p>❌ Invalid link or missing parameters.</p>";
-    } else {
-      switch (type) {
-        case "recovery":
-          document.body.innerHTML = `<p>🔐 Password reset in progress...</p><p>Token: ${token}</p>`;
-          break;
-        case "signup":
-          document.body.innerHTML = `<p>✅ Email confirmed!</p><p>Token: ${token}</p>`;
-          break;
-        case "invite":
-          document.body.innerHTML = `<p>👋 Welcome! Account invite accepted.</p><p>Token: ${token}</p>`;
-          break;
-        default:
-          document.body.innerHTML = `<p>📦 Unrecognized type: ${type}</p><p>Token: ${token}</p>`;
-      }
+    const content = document.getElementById("content");
 
-      // Later you can redirect to your real app with token
-      // window.location.href = `https://your-shiny-app.com?token=${token}`;
+    // ❌ Invalid link fallback
+    if (!token || type !== "recovery") {
+      content.innerHTML = "<p>❌ Invalid or expired password reset link.</p>";
+    } else {
+      // ✅ Set the session using token (to allow password change)
+      const { error } = await supabase.auth.setSession({
+        access_token: token,
+        refresh_token: token
+      });
+
+      if (error) {
+        content.innerHTML = `<p>❌ Failed to authenticate: ${error.message}</p>`;
+      } else {
+        // ✅ Show password reset form
+        content.innerHTML = `
+          <form id="reset-form">
+            <label>New Password:</label><br>
+            <input type="password" id="new-password" required />
+            <button type="submit">Reset Password</button>
+          </form>
+          <p id="status"></p>
+        `;
+
+        document.getElementById("reset-form").addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const newPassword = document.getElementById("new-password").value;
+          const status = document.getElementById("status");
+
+          const { error } = await supabase.auth.updateUser({
+            password: newPassword
+          });
+
+          if (error) {
+            status.innerHTML = "❌ " + error.message;
+          } else {
+            status.innerHTML = "✅ Password updated! You can now log in.";
+          }
+        });
+      }
     }
   </script>
 </body>
