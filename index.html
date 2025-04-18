@@ -2,16 +2,36 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Redirecting...</title>
+  <title>Supabase Auth Flow</title>
 </head>
 <body>
-  <h1>Thanks! You're being redirected...</h1>
-  <!-- <script>
+  <h1>Authenticating...</h1>
+
+  <script>
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
     const type = params.get("type");
 
-    document.body.innerHTML += `<p>Token: ${token}</p><p>Type: ${type}</p>`;
-  </script> -->
+    if (!token || !type) {
+      document.body.innerHTML = "<p>❌ Invalid link or missing parameters.</p>";
+    } else {
+      switch (type) {
+        case "recovery":
+          document.body.innerHTML = `<p>🔐 Password reset in progress...</p><p>Token: ${token}</p>`;
+          break;
+        case "signup":
+          document.body.innerHTML = `<p>✅ Email confirmed!</p><p>Token: ${token}</p>`;
+          break;
+        case "invite":
+          document.body.innerHTML = `<p>👋 Welcome! Account invite accepted.</p><p>Token: ${token}</p>`;
+          break;
+        default:
+          document.body.innerHTML = `<p>📦 Unrecognized type: ${type}</p><p>Token: ${token}</p>`;
+      }
+
+      // Later you can redirect to your real app with token
+      // window.location.href = `https://your-shiny-app.com?token=${token}`;
+    }
+  </script>
 </body>
 </html>
