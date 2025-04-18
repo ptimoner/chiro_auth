@@ -1,46 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8" />
   <title>Reset Password</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <h1>Reset your password</h1>
-  <input type="password" id="new-password" placeholder="New password" />
-  <button onclick="resetPassword()">Set Password</button>
+  <h1>🔐 Reset your password</h1>
+
+  <div id="form" style="display: none;">
+    <input type="password" id="new-password" placeholder="New password" />
+    <button onclick="resetPassword()">Reset Password</button>
+  </div>
+
+  <p id="message"></p>
 
   <script>
     const supabase = supabase.createClient(
-      'https://rrkmlitneztwsaemfdha.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJya21saXRuZXp0d3NhZW1mZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3OTgzNTIsImV4cCI6MjA2MDM3NDM1Mn0.9NAAZuqcECqk7Y63_L-WII2TqHVHByJhbVfJu4rly8c'
+'https://rrkmlitneztwsaemfdha.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJya21saXRuZXp0d3NhZW1mZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3OTgzNTIsImV4cCI6MjA2MDM3NDM1Mn0.9NAAZuqcECqk7Y63_L-WII2TqHVHByJhbVfJu4rly8c'                     // your anon/public key
     );
 
-    const url = new URL(window.location.href);
-    const token = url.searchParams.get("token");
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    const type = params.get('type');
+
+    async function setSessionAndShowForm() {
+      if (!token || type !== 'recovery') {
+        document.getElementById("message").innerText = "❌ Invalid or missing token.";
+        return;
+      }
+
+      const { data, error } = await supabase.auth.setSession({
+        access_token: token,
+        refresh_token: token
+      });
+
+      if (error) {
+        document.getElementById("message").innerText = "❌ Failed to authenticate: " + error.message;
+        return;
+      }
+
+      document.getElementById("message").innerText = "✅ Authenticated. You can now reset your password.";
+      document.getElementById("form").style.display = "block";
+    }
 
     async function resetPassword() {
       const newPassword = document.getElementById("new-password").value;
 
-      const { error } = await supabase.auth.updateUser({
+      const { data, error } = await supabase.auth.updateUser({
         password: newPassword
       });
 
       if (error) {
-        alert("Error resetting password: " + error.message);
+        alert("❌ Error resetting password: " + error.message);
       } else {
-        alert("Password reset successfully!");
+        alert("✅ Password successfully reset! You can now log in.");
       }
     }
 
-    // VERY IMPORTANT: The user must already be signed in via recovery link
-    supabase.auth.getSession().then(({ data }) => {
-      if (!data.session) {
-        supabase.auth.setSession({
-          access_token: token,
-          refresh_token: token
-        });
-      }
-    });
+    setSessionAndShowForm();
   </script>
 </body>
 </html>
+
