@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+</head>
+<body>
+  <h1>Thanks! You're being redirected...</h1>
+  <script>
+    // Get URL params (token, type, etc.)
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const type = params.get("type");
+
+    // Show it or forward it (optional)
+    console.log("Token:", token, "Type:", type);
+
+    // Example: Redirect to your Shiny app eventually
+    // window.location.href = `https://your-shiny-app.com/login?token=${token}`;
+
+    // Just display token for now
+    document.body.innerHTML += `<p>Token: ${token}</p><p>Type: ${type}</p>`;
+  </script>
+</body>
+</html>
