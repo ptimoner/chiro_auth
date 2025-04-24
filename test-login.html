@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/@supabase/supabase-js"></script>
 </head>
 <body>
-    <h1>Login Test Dalou</h1>
+    <h1>Login Test Dilou</h1>
     <form id="login-form">
         <input type="email" id="email" placeholder="Enter your email" required />
         <input type="password" id="password" placeholder="Enter your password" required />
@@ -16,18 +16,19 @@
     <p id="message"></p>
 
     <script>
-        // Ensure the script runs only after the DOM is fully loaded
+        // Wait until the DOM is fully loaded
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Supabase client with your project URL and anon key
+            // Initialize the Supabase client
             const supabase = supabase.createClient(
-                'https://rrkmlitneztwsaemfdha.supabase.co', 
+                'https://rrkmlitneztwsaemfdha.supabase.co',
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJya21saXRuZXp0d3NhZW1mZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3OTgzNTIsImV4cCI6MjA2MDM3NDM1Mn0.9NAAZuqcECqk7Y63_L-WII2TqHVHByJhbVfJu4rly8c'
             );
 
             console.log('Supabase client initialized:', supabase);
 
             // Attach event listener to the login form
-            document.getElementById('login-form').addEventListener('submit', async (e) => {
+            const loginForm = document.getElementById('login-form');
+            loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault(); // Prevent the form from reloading the page
                 console.log('Login form submitted');
 
@@ -37,10 +38,11 @@
                 console.log('Email:', email);
                 console.log('Password:', password);
 
+                // Try logging in with the provided credentials
                 try {
                     const { data: { user, session }, error } = await supabase.auth.signInWithPassword({
-                        email: email,
-                        password: password,
+                        email,
+                        password,
                     });
 
                     const message = document.getElementById('message');
