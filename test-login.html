@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Test</title>
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
+</head>
+<body>
+    <h1>Login Test</h1>
+    <form id="login-form">
+        <input type="email" id="email" placeholder="Enter your email" required />
+        <input type="password" id="password" placeholder="Enter your password" required />
+        <button type="submit">Login</button>
+    </form>
+    <p id="message"></p>
+
+    <script>
+        // Replace with your Supabase project URL and anon/public key
+        const supabase = supabase.createClient('https://your-project-id.supabase.co', 'your-anon-key');
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Attempt to log in with the provided email and password
+            const { data: { user, session }, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password,
+            });
+
+            const message = document.getElementById('message');
+            if (error) {
+                message.textContent = 'Login failed: ' + error.message;
+            } else {
+                message.textContent = 'Login successful! Welcome, ' + user.email;
+                console.log('Session:', session);
+            }
+        });
+    </script>
+</body>
+</html>
