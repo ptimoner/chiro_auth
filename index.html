@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reset Password CANELA</title>
+  <title>Reset Password</title>
   <script src="https://unpkg.com/@supabase/supabase-js"></script>
 </head>
 <body>
-  <h1>Reset Your Password</h1>
+  <h1>Reset Your Password nice</h1>
   <p>Enter a new password below to reset your password.</p>
   <form id="reset-password-form">
     <input type="password" id="password" placeholder="Enter new password" required />
@@ -16,9 +16,9 @@
   <p id="message"></p>
 
   <script>
-    // Initialize Supabase client with your project URL and anon/public key
+    // Initialize Supabase client
     const supabaseClient = supabase.createClient(
-      'https://rrkmlitneztwsaemfdha.supabase.co', 
+      'https://rrkmlitneztwsaemfdha.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJya21saXRuZXp0d3NhZW1mZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3OTgzNTIsImV4cCI6MjA2MDM3NDM1Mn0.9NAAZuqcECqk7Y63_L-WII2TqHVHByJhbVfJu4rly8c'
     );
 
@@ -26,8 +26,10 @@
       const urlParams = new URLSearchParams(window.location.search);
       const accessToken = urlParams.get('access_token'); // Get the token from the URL
 
+      // Check if the access token exists
       if (!accessToken) {
         document.getElementById('message').textContent = 'Error: No access token found in the URL.';
+        document.getElementById('message').style.color = 'red';
         return;
       }
 
@@ -38,8 +40,7 @@
 
         // Use the token to update the user's password
         const { error } = await supabaseClient.auth.updateUser({
-          access_token: accessToken,
-          password: password,
+          password,
         });
 
         const message = document.getElementById('message');
