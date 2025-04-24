@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reset Password</title>
+  <title>Reset Password CANELA</title>
   <script src="https://unpkg.com/@supabase/supabase-js"></script>
 </head>
 <body>
@@ -16,8 +16,11 @@
   <p id="message"></p>
 
   <script>
-    // Replace with your Supabase project URL and anon/public key
-    const supabase = supabase.createClient('https://your-project-id.supabase.co', 'your-anon-key');
+    // Initialize Supabase client with your project URL and anon/public key
+    const supabaseClient = supabase.createClient(
+      'https://rrkmlitneztwsaemfdha.supabase.co', 
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJya21saXRuZXp0d3NhZW1mZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3OTgzNTIsImV4cCI6MjA2MDM3NDM1Mn0.9NAAZuqcECqk7Y63_L-WII2TqHVHByJhbVfJu4rly8c'
+    );
 
     async function resetPassword() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -34,7 +37,7 @@
         const password = document.getElementById('password').value;
 
         // Use the token to update the user's password
-        const { error } = await supabase.auth.updateUser({
+        const { error } = await supabaseClient.auth.updateUser({
           access_token: accessToken,
           password: password,
         });
@@ -42,8 +45,10 @@
         const message = document.getElementById('message');
         if (error) {
           message.textContent = 'Error: ' + error.message;
+          message.style.color = 'red';
         } else {
           message.textContent = 'Password has been reset successfully!';
+          message.style.color = 'green';
         }
       });
     }
