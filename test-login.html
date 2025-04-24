@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/@supabase/supabase-js"></script>
 </head>
 <body>
-    <h1>Login Test canela</h1>
+    <h1>Login Test Dalou</h1>
     <form id="login-form">
         <input type="email" id="email" placeholder="Enter your email" required />
         <input type="password" id="password" placeholder="Enter your password" required />
@@ -16,46 +16,49 @@
     <p id="message"></p>
 
     <script>
-        // Initialize Supabase client with your project URL and anon key
-        const supabase = supabase.createClient(
-            'https://rrkmlitneztwsaemfdha.supabase.co', 
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJya21saXRuZXp0d3NhZW1mZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3OTgzNTIsImV4cCI6MjA2MDM3NDM1Mn0.9NAAZuqcECqk7Y63_L-WII2TqHVHByJhbVfJu4rly8c'
-        );
+        // Ensure the script runs only after the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Supabase client with your project URL and anon key
+            const supabase = supabase.createClient(
+                'https://rrkmlitneztwsaemfdha.supabase.co', 
+                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJya21saXRuZXp0d3NhZW1mZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3OTgzNTIsImV4cCI6MjA2MDM3NDM1Mn0.9NAAZuqcECqk7Y63_L-WII2TqHVHByJhbVfJu4rly8c'
+            );
 
-        console.log('Supabase client initialized:', supabase);
+            console.log('Supabase client initialized:', supabase);
 
-        // Attach event listener to the login form
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault(); // Prevent the form from reloading the page
-            console.log('Login form submitted');
+            // Attach event listener to the login form
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault(); // Prevent the form from reloading the page
+                console.log('Login form submitted');
 
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
 
-            console.log('Email:', email);
-            console.log('Password:', password);
+                console.log('Email:', email);
+                console.log('Password:', password);
 
-            try {
-                const { data: { user, session }, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password,
-                });
+                try {
+                    const { data: { user, session }, error } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: password,
+                    });
 
-                const message = document.getElementById('message');
-                if (error) {
-                    console.error('Login error:', error);
-                    message.textContent = 'Login failed: ' + error.message;
-                    message.style.color = 'red';
-                } else {
-                    console.log('Login successful:', user);
-                    message.textContent = 'Login successful! Welcome, ' + user.email;
-                    message.style.color = 'green';
-                    console.log('Session:', session); // Log session details
+                    const message = document.getElementById('message');
+                    if (error) {
+                        console.error('Login error:', error);
+                        message.textContent = 'Login failed: ' + error.message;
+                        message.style.color = 'red';
+                    } else {
+                        console.log('Login successful:', user);
+                        message.textContent = 'Login successful! Welcome, ' + user.email;
+                        message.style.color = 'green';
+                        console.log('Session:', session); // Log session details
+                    }
+                } catch (err) {
+                    console.error('Unexpected error:', err);
+                    document.getElementById('message').textContent = 'An unexpected error occurred.';
                 }
-            } catch (err) {
-                console.error('Unexpected error:', err);
-                document.getElementById('message').textContent = 'An unexpected error occurred.';
-            }
+            });
         });
     </script>
 </body>
