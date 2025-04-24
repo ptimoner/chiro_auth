@@ -7,7 +7,7 @@
     <script src="https://unpkg.com/@supabase/supabase-js"></script>
 </head>
 <body>
-    <h1>Login Test</h1>
+    <h1>Login Test MSG</h1>
     <form id="login-form">
         <input type="email" id="email" placeholder="Enter your email" required />
         <input type="password" id="password" placeholder="Enter your password" required />
@@ -17,7 +17,7 @@
 
     <script>
         // Replace with your Supabase project URL and anon/public key
-        const supabase = supabase.createClient('https://your-project-id.supabase.co', 'your-anon-key');
+        const supabase = supabase.createClient('https://rrkmlitneztwsaemfdha.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJya21saXRuZXp0d3NhZW1mZGhhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ3OTgzNTIsImV4cCI6MjA2MDM3NDM1Mn0.9NAAZuqcECqk7Y63_L-WII2TqHVHByJhbVfJu4rly8c');
 
         // Attach event listener to the login form
         document.getElementById('login-form').addEventListener('submit', async (e) => {
